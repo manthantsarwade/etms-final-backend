@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: manager
+      MYSQL_DATABASE: etms
+      MYSQL_USER: etms
+      MYSQL_PASSWORD: manager
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: .                    
+    image: etms-backend-image        
+    container_name: etms-backend_container
+    restart: always
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/etms?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=manager
+      # Set the upload directory as an environment variable
+      - UPLOAD_DIR=/app/uploads
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    volumes:
+      # Mount a volume to persist uploaded files outside the container
+      - app_files_volume:/app/files
+
+volumes:
+  mysql_data:
+  app_files_volume: 
