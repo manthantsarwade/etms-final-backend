@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173","http://etms-frondend-lb-1946388490.us-east-1.elb.amazonaws.com/login") 
+                        .allowedOrigins("http://localhost:5173","http://etms-frondend-lb-1984364778.us-east-1.elb.amazonaws.com") 
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
