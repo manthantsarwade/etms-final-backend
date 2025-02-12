@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 # Build the application using Maven
-RUN mvn clean package -DskipTests
+RUN mvn clean install -DskipTests && mvn package -DskipTests
 
 # Use OpenJDK as the runtime environment
 FROM openjdk:17
