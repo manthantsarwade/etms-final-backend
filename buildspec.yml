@@ -7,23 +7,31 @@ phases:
       - aws --version
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 412381779393.dkr.ecr.ap-south-1.amazonaws.com/etms-backend
       - REPOSITORY_URI=412381779393.dkr.ecr.ap-south-1.amazonaws.com/etms-backend
-      - IMAGE_TAG=build-$(date +%Y%m%d%H%M%S)
+      # Use a more descriptive tag, like 'latest' and a timestamped tag.
+      - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+      - LATEST_TAG=latest
+
 
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image for backend...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      # Build and tag the image with both 'latest' and the timestamped tag *at build time*.
+      - docker build -t etms-backend:$LATEST_TAG -t etms-backend:$IMAGE_TAG .
+
 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing image to ECR...
-      - docker push $REPOSITORY_URI:latest
+      # Push both tags to ECR
+      - docker tag etms-backend:$LATEST_TAG $REPOSITORY_URI:$LATEST_TAG
+      - docker push $REPOSITORY_URI:$LATEST_TAG
+      - docker tag etms-backend:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"backend","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      #  Use the fully qualified image URI in the imagedefinitions.json
+      - printf '[{"name":"backend","imageUri":"%s"}]' "$REPOSITORY_URI:$IMAGE_TAG" > imagedefinitions.json
       - cat imagedefinitions.json
 
 artifacts:
