@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173","http://etmsproject.duckdns.org","http://65.0.125.172:8080") 
+                        .allowedOrigins("http://localhost:5173","http://etmsproject.duckdns.org","http://65.0.125.172") 
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
