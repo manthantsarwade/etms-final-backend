@@ -49,8 +49,9 @@ public class TaskServiceImpl implements TaskService {
 	     @Autowired
 	    private ModelMapper modelMapper;
 	     
-	     private final String uploadDir = "C:\\Users\\intel\\Desktop\\front\\files"; // Configure the base upload directory
-	     private final Path root = Paths.get("C:\\Users\\intel\\Desktop\\front\\files");
+		private final String uploadDir = "/app/uploads"; 
+		private final Path root = Paths.get(uploadDir);
+		
 	     // Method to get tasks by Employee ID
 	     public List<TaskRespDto> getAllTasks(Long employeeId) {
 	          return taskRepository.findByEmployee_Id(employeeId).stream()
